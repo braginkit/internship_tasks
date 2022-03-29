@@ -1,2 +1,2 @@
 # internship_tasks
-Tasks I solved while applying for some jobs
+Tasks I solved applying for some jobs
