@@ -1,0 +1,59 @@
+{% extends "base.html" %}
+
+{% block content %}
+<style>
+.table {
+	width: 100%;
+	margin-bottom: 20px;
+	border: 15px solid #F2F8F8;
+	border-top: 5px solid #F2F8F8;
+	border-collapse: collapse; 
+}
+.table th {
+	font-weight: bold;
+	padding: 5px;
+	background: #F2F8F8;
+	border: none;
+	border-bottom: 5px solid #F2F8F8;
+}
+.table td {
+	padding: 5px;
+	border: none;
+	border-bottom: 5px solid #F2F8F8;
+}
+</style>
+<h1 class="title">
+  Current stock market prices
+</h1>
+<h2 class="subtitle">
+  This table illustrates current stock market situation.
+</h2>,
+<table class="table">
+<thead>
+  <tr>
+    <th>Company</th>
+    <th>Share price</th>
+    <th>Total number of shares</th>
+    <th>Shares on hands</th>
+  </tr>
+</thead>
+{{ form.csrf_token }}
+{% for company in query %}
+<tr>
+  <td>
+    {{company.name}}
+  </td>
+  <td>
+    ${{company.current_share_price}}
+  </td>
+  <td>
+    {{company.share_total_number}}
+  </td>
+  <td>
+    {{company.share_on_hands}}
+  </td>
+</tr>
+{% endfor %}
+</table>
+
+{% endblock %}
