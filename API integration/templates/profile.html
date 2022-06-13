@@ -1,0 +1,184 @@
+{% extends "base.html" %}
+{% from "_formhelpers.html" import render_field %}
+
+{% block content %}
+<style>
+  .table {
+    width: 100%;
+    margin-bottom: 20px;
+    border: 15px solid #F2F8F8;
+    border-top: 5px solid #F2F8F8;
+    border-collapse: collapse; 
+  }
+  .table th {
+    font-weight: bold;
+    padding: 5px;
+    background: #F2F8F8;
+    border: none;
+    border-bottom: 5px solid #F2F8F8;
+  }
+  .table td {
+    padding: 5px;
+    border: none;
+    border-bottom: 5px solid #F2F8F8;
+  }
+  .select {
+  display:flex;
+  flex-direction: column;
+  position:relative;
+  width:250px;
+  height:40px;
+}
+
+.option {
+  padding:0 30px 0 10px;
+  min-height:40px;
+  display:flex;
+  align-items:center;
+  background:#333;
+  border-top:#222 solid 1px;
+  position:absolute;
+  top:0;
+  width: 100%;
+  pointer-events:none;
+  order:2;
+  z-index:1;
+  transition:background .4s ease-in-out;
+  box-sizing:border-box;
+  overflow:hidden;
+  white-space:nowrap;
+  
+}
+
+.option:hover {
+  background:#666;
+}
+
+.select:focus .option {
+  position:relative;
+  pointer-events:all;
+}
+
+input {
+  left:0px;
+}
+
+input:checked + label {
+  order: 1;
+  z-index:2;
+  background:#666;
+  border-top:none;
+  position:relative;
+}
+
+input:checked + label:after {
+  content:'';
+  width: 0; 
+	height: 0; 
+	border-left: 5px solid transparent;
+	border-right: 5px solid transparent;
+	border-top: 5px solid white;
+  position:absolute;
+  right:10px;
+  top:calc(50% - 2.5px);
+  pointer-events:none;
+  z-index:3;
+}
+
+input:checked + label:before {
+  position:absolute;
+  right:0;
+  height: 40px;
+  width: 40px;
+  content: '';
+  background:#666;
+}
+</style>
+
+
+<h1 class="title">
+  Welcome, {{ name }}!
+</h1>
+
+
+<h2 class="subtitle">
+  Your collection of towns:
+</h2>
+<table class="table">
+  <thead>
+    <tr>
+      <th>Town</th>
+      <th>latitude</th>
+      <th>longitude</th>
+    </tr>
+  </thead>
+  {% for que in query_my_towns %}
+  <tr>
+    <td>
+      {{ que.Town.name }}
+    </td>
+    <td>
+      {{ que.Town.latitude }}
+    </td>
+    <td>
+      {{ que.Town.longitude }}
+    </td>
+  </tr>
+  {% endfor %}
+</table>
+
+
+<form method="POST" action="{{ url_for('main.profile') }}">
+  <h2>
+    Add a town:
+  </h2>
+  <dd>
+    {{ add_form.csrf_token }}
+    {{ add_form.town_name.label }}
+    {{ add_form.town_name }}
+    {{ add_form.flag }}
+    <ul>
+      {% for error in add_form.csrf_token.errors %}
+        {errors={'csrf_token': ['CSRF token missing']}}
+      {% endfor %}
+    </ul>
+  </dd>
+  <p><input type="Submit" name="Submit" value="Add">
+</form>
+
+
+<form method="POST" action="{{ url_for('main.profile') }}">
+  <h3>
+    Calculate close towns:
+  </h3>
+  <dd>
+    {{ calculate_form.csrf_token }}
+    {{ calculate_form.latitude.label }}
+    {{ calculate_form.latitude }}
+    {{ calculate_form.longitude.label }}
+    {{ calculate_form.longitude }}
+    {{ calculate_form.flag }}
+    <ul>
+      {% for error in calculate_form.latitude.errors %}
+          <li style="color:red;">{{ error }}</li>
+      {% endfor %}
+      {% for error in calculate_form.longitude.errors %}
+          <li style="color:red;">{{ error }}</li>
+      {% endfor %}
+      {% for error in calculate_form.csrf_token.errors %}
+        {errors={'csrf_token': ['CSRF token missing']}}
+      {% endfor %}
+    </ul>
+  </dd>
+  <p><input type="Submit" name="Submit" value="Calculate">
+</form>
+
+{% for que in query_calculations %}
+<tr>
+  <td>
+    {{ que }}
+  </td>
+</tr>
+{% endfor %}
+
+{% endblock %}
